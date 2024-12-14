@@ -3,12 +3,12 @@ agent { docker { image 'node:16-alpine' } }
 stages {
     stage('Build') {
         steps {
-            echo 'Building the app with node checkoing the webhook .....'
+            echo 'Building the app with node checking the webhook .....'
             }
     }
     stage('Test') {
         steps {
-            echo 'Testing the app with node.....'
+            echo 'Testing the app with node checking the webhook.....'
             }
     }
     stage('Deploy') {
