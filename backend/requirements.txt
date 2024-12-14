@@ -1,0 +1,15 @@
+APScheduler==3.10.4
+Flask==3.0.3
+Flask_Bcrypt==1.0.1
+Flask_Cors==4.0.1
+Flask_JWT_Extended==4.6.0
+flask_mail==0.10.0
+newsapi_python==0.2.7
+newspaper3k==0.2.8
+nltk==3.9.1
+numpy==2.1.2
+pandas==2.2.3
+pymongo==4.10.1
+python-dotenv==1.0.1
+Requests==2.32.3
+scikit_learn==1.5.2

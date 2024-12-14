@@ -1,20 +1,14 @@
 pipeline {
-agent { docker { image 'node:16-alpine' } }
-stages {
-    stage('Build') {
-        steps {
-            echo 'Building the app with node checking the webhook .....'
+    agent { docker { image 'node:16-alpine' } }
+    stages {
+        stage('Build') {
+            steps {
+                sh '''
+                cd react
+                npm install
+                npm run build
+                '''
             }
-    }
-    stage('Test') {
-        steps {
-            echo 'Testing the app with node checking the webhook.....'
-            }
-    }
-    stage('Deploy') {
-        steps {
-            echo 'Deploying the app with node checkin the webhook....'
         }
     }
-}
 }
