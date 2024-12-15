@@ -23,7 +23,7 @@ pipeline {
         stage ('Deploy') {
             steps {
                 unstash 'build'
-                sh 'ls -la build'
+                sh 'ls -la'
                 sh 'pwd'
                 withCredentials([sshUserPrivateKey(credentialId:'jenkins-agent',keyFileVariable:'SSH_PRIVATE_KEY')]) {
                 sh'''
