@@ -43,7 +43,7 @@ pipeline {
             steps {
                 sh '''
                 cd react
-                # npm run build
+                npm run build
                 '''
             }
             post {
