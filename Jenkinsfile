@@ -7,7 +7,7 @@ pipeline {
         CI = 'false'
     }
     options {
-        preserveStashes(buildCount = 5)
+        preserveStashes()
     }
     stages {
         stage('Cache modules') {
