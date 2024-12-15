@@ -13,11 +13,13 @@ pipeline {
         stage('Cache modules') {
             steps {
                 dir ('react') {
-                    try {
-                    unstash 'node_modules'
-                    sh 'Successfully restored'
-                    } catch (Exception e) {
-                        echo 'no cached node_modules'
+                    script {
+                        if (fileExists('node_modules')) {
+                            echo 'node_modules found, restoring from cache'
+                            unstash 'node_modules'
+                        } else {
+                            echo 'No cached node_modules found, skipping restore'
+                        }
                     }
                 }
             }
