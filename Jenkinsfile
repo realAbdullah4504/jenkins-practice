@@ -11,10 +11,14 @@ pipeline {
     }
     stages {
         stage('Cache modules') {
+            when {
+                expression { currentBuild.previousBuild?.result == 'SUCCESS' }  // Only try to restore if previous build was successful
+            }
             steps {
                 dir('react') {
                     catchError(message: 'No cache found, proceeding with fresh install') {
-                    unstash 'node_modules'
+                        unstash 'node_modules'
+                        echo 'Successfully restored node_modules from cache'
                     }
                 }
             }
