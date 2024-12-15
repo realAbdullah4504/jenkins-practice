@@ -39,7 +39,7 @@ pipeline {
             steps {
                 sh '''
                 cd react
-                npm run build
+                # npm run build
                 '''
             }
             post {
@@ -61,9 +61,9 @@ pipeline {
                     # Deploy files
                     mkdir -p ~/.ssh
                     ssh-keyscan -H 172.27.142.51 >> ~/.ssh/known_hosts 
-                    scp -i $SSH_PRIVATE_KEY -r react/build/* abdullah@172.27.142.51:/var/www/html/
+                    scp -i $SSH_PRIVATE_KEY -r react/build/* abdullah@172.27.142.51:/var/www/html/news-app/
                     # Debug: List contents of remote directory
-                    ssh -i $SSH_PRIVATE_KEY abdullah@172.27.142.51 "ls -la /var/www/html/"
+                    ssh -i $SSH_PRIVATE_KEY abdullah@172.27.142.51 "ls -la /var/www/html/news-app/"
                     ssh -i $SSH_PRIVATE_KEY abdullah@172.27.142.51 'systemctl status nginx'
                     '''
                 }
