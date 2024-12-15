@@ -11,9 +11,11 @@ pipeline {
     }
     stages {
         stage('Cache modules') {
-            dir('react') {
-                catchError(message: 'No cache found, proceeding with fresh install') {
-                unstash 'node_modules'
+            steps {
+                dir('react') {
+                    catchError(message: 'No cache found, proceeding with fresh install') {
+                    unstash 'node_modules'
+                    }
                 }
             }
         }
