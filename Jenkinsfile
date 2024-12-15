@@ -23,11 +23,12 @@ pipeline {
         stage ('Deploy') {
             steps {
                 unstash 'build'
-                sh 'cat build'
+                sh 'ls -la build'
+                sh 'pwd'
                 withCredentials([sshUserPrivateKey(credentialId:'jenkins-agent',keyFileVariable:'SSH_PRIVATE_KEY')]) {
                 sh'''
                 cat $SSH_PRIVATE_KEY
-                scp -i $SSH_PRIVATE_KEY -r ./* abdullah@172.27.142.51:~/test
+                scp -i $SSH_PRIVATE_KEY -r ./ abdullah@172.27.142.51:~/test
                 '''
                 }
             }
