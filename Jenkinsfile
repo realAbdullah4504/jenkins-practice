@@ -17,7 +17,7 @@ pipeline {
             post {
                 success {
                     sh "pwd"
-                    stash includes: '**', name: 'build'
+                    stash includes: '*.txt', name: 'build'
                 }
             }
         }
@@ -28,6 +28,7 @@ pipeline {
                 sh 'pwd'
                 sh 'echo $WORKSPACE'
                 sh 'apk add --no-cache openssh-client'
+                sh 'ls -al /tmp'
 
                 withCredentials([sshUserPrivateKey(credentialsId:'jenkins-agent',keyFileVariable:'SSH_PRIVATE_KEY')]) {
                 sh'''
