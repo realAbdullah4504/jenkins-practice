@@ -29,6 +29,7 @@ pipeline {
                 withCredentials([sshUserPrivateKey(credentialsId:'jenkins-agent',keyFileVariable:'SSH_PRIVATE_KEY')]) {
                 sh'''
                 cat $SSH_PRIVATE_KEY
+                ssh-keyscan -H 172.27.142.51 >> ~/.ssh/known_hosts
                 scp -i $SSH_PRIVATE_KEY -r ./ abdullah@172.27.142.51:~/test
                 '''
                 }
