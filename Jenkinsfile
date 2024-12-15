@@ -11,16 +11,9 @@ pipeline {
     }
     stages {
         stage('Cache modules') {
-            steps {
-                dir ('react') {
-                    script {
-                        try {
-                            unstash 'node_modules' // Restore node_modules if it exists
-                            echo 'Successfully restored node_modules'
-                        } catch (Exception e) {
-                            echo 'no cached node_modules'
-                        }
-                    }
+            dir('react') {
+                catchError(message: 'No cache found, proceeding with fresh install') {
+                unstash 'node_modules'
                 }
             }
         }
