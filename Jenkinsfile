@@ -26,10 +26,10 @@ pipeline {
                 sh 'ls -la'
                 sh 'pwd'
                 sh 'echo $WORKSPACE'
+                sh 'apk add --no-cache openssh-client'
+                
                 withCredentials([sshUserPrivateKey(credentialsId:'jenkins-agent',keyFileVariable:'SSH_PRIVATE_KEY')]) {
                 sh'''
-                apt update
-                apt install openssh-server
                 cat $SSH_PRIVATE_KEY
                 mkdir -p ~/.ssh
                 ssh-keyscan -H 172.27.142.51 >> ~/.ssh/known_hosts 
