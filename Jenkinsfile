@@ -25,7 +25,7 @@ pipeline {
                 unstash 'build'
                 sh 'ls -la'
                 sh 'pwd'
-                withCredentials([sshUserPrivateKey(credentialId:'jenkins-agent',keyFileVariable:'SSH_PRIVATE_KEY')]) {
+                withCredentials([sshUserPrivateKey(credentialsId:'jenkins-agent',keyFileVariable:'SSH_PRIVATE_KEY')]) {
                 sh'''
                 cat $SSH_PRIVATE_KEY
                 scp -i $SSH_PRIVATE_KEY -r ./ abdullah@172.27.142.51:~/test
