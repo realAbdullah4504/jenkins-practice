@@ -1,7 +1,7 @@
 pipeline {
     agent { docker { 
         image 'node:16-alpine' 
-        args '-v /usr/bin/scp:/usr/bin/scp'
+        args '-v /usr/bin/scp:/usr/bin/scp -v /usr/bin/ssh:/usr/bin/ssh'
         } }
     environment {
         CI = 'false'
@@ -25,6 +25,7 @@ pipeline {
                 unstash 'build'
                 sh 'ls -la'
                 sh 'pwd'
+                sh 'echo $WORKSPACE'
                 withCredentials([sshUserPrivateKey(credentialsId:'jenkins-agent',keyFileVariable:'SSH_PRIVATE_KEY')]) {
                 sh'''
                 cat $SSH_PRIVATE_KEY
