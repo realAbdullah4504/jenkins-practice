@@ -15,10 +15,8 @@ pipeline {
             }
             post {
                 success {
-                    dir("/") {  //changing the current directory
                     sh "pwd"
                     stash includes: '**', name: 'build'
-                    }
                 }
             }
         }
