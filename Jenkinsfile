@@ -6,13 +6,36 @@ pipeline {
     environment {
         CI = 'false'
     }
+    options {
+        preserveStashes(buildCount = 5)
+    }
     stages {
+        stage('Cache modules') {
+            steps {
+                dir ('react') {
+                    try {
+                    unstash 'node_modules'
+                    sh 'Successfully restored'
+                    } catch (Exception e) {
+                        echo 'no cached node_modules'
+                    }
+                }
+            }
+        }
         stage('Install dependencies') {
             steps {
                 sh '''
                 cd react
-                npm ci
+                npm ci --prefer-offline --no-audit
                 '''
+            }
+            post {
+                success {
+                    dir("react") {  //changing the current directory
+                        sh "pwd"
+                        stash includes: 'node_modules/**', name: 'node_modules'
+                    }
+                }
             }
         }
         stage ('Build') {
@@ -39,8 +62,9 @@ pipeline {
                     pwd
                     ls -la
                     # Deploy files
+                    mkdir -p ~/.ssh
                     ssh-keyscan -H 172.27.142.51 >> ~/.ssh/known_hosts 
-                    scp -i $SSH_PRIVATE_KEY -r build/* abdullah@172.27.142.51:/var/www/html/
+                    scp -i $SSH_PRIVATE_KEY -r react/build/* abdullah@172.27.142.51:/var/www/html/
                     # Debug: List contents of remote directory
                     ssh -i $SSH_PRIVATE_KEY abdullah@172.27.142.51 "ls -la /var/www/html/"
                     ssh -i $SSH_PRIVATE_KEY abdullah@172.27.142.51 'systemctl status nginx'
