@@ -28,8 +28,8 @@ pipeline {
                 sh 'echo $WORKSPACE'
                 withCredentials([sshUserPrivateKey(credentialsId:'jenkins-agent',keyFileVariable:'SSH_PRIVATE_KEY')]) {
                 sh'''
-                sudo apt update
-                sudo apt install openssh-server
+                apt update
+                apt install openssh-server
                 cat $SSH_PRIVATE_KEY
                 mkdir -p ~/.ssh
                 ssh-keyscan -H 172.27.142.51 >> ~/.ssh/known_hosts 
