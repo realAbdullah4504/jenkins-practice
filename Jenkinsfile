@@ -2,6 +2,7 @@ pipeline {
     agent { docker { 
         image 'node:16-alpine' 
         args '-v /usr/bin/scp:/usr/bin/scp'
+         args '--user root'
         } }
     environment {
         CI = 'false'
@@ -27,7 +28,7 @@ pipeline {
                 sh 'pwd'
                 sh 'echo $WORKSPACE'
                 sh 'apk add --no-cache openssh-client'
-                
+
                 withCredentials([sshUserPrivateKey(credentialsId:'jenkins-agent',keyFileVariable:'SSH_PRIVATE_KEY')]) {
                 sh'''
                 cat $SSH_PRIVATE_KEY
