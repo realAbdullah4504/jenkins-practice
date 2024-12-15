@@ -1,5 +1,11 @@
 pipeline {
-    agent { docker { image 'node:16-alpine' } }
+    agent { docker { 
+        image 'node:16-alpine' 
+        args '-v /usr/bin/scp:/usr/bin/scp -v /usr/bin/ssh:/usr/bin/ssh'
+        } }
+    environment {
+        CI = 'false'
+    }
     stages {
         stage('Install dependencies') {
             steps {
@@ -28,10 +34,13 @@ pipeline {
         stage ('Deploy') {
             steps {
                 unstash 'build'
-                sh '''
-                scp -i ~/.ssh/id_ubuntu -r build/* abdullah@172.27.142.51:/var/www/html/
-                ssh -i ~/.ssh/id_ubuntu abdullah@172.27.142.51 'sudo systemctl restart nginx'
-                '''
+                withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-agent',keyFileVariable: 'SSH_PRIVATE_KEY')]) {
+                    sh '''
+                    sudo chown -R abdullah:abdullah /var/www
+                    scp -i $SSH_PRIVATE_KEY -r build/* abdullah@172.27.142.51:/var/www/html/
+                    ssh -i $SSH_PRIVATE_KEY abdullah@172.27.142.51 'sudo systemctl restart nginx'
+                    '''
+                }
             }
         }
     }
