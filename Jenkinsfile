@@ -36,9 +36,7 @@ pipeline {
                 unstash 'build'
                 withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-agent',keyFileVariable: 'SSH_PRIVATE_KEY')]) {
                     sh '''
-                    sudo chown -R abdullah:abdullah /var/www
                     scp -i $SSH_PRIVATE_KEY -r build/* abdullah@172.27.142.51:/var/www/html/
-                    ssh -i $SSH_PRIVATE_KEY abdullah@172.27.142.51 'sudo systemctl restart nginx'
                     '''
                 }
             }
