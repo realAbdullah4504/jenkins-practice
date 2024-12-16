@@ -36,19 +36,19 @@ pipeline {
         }
         stage ('Deploy') {
             steps { 
-                    withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-agent',keyFileVariable: 'SSH_PRIVATE_KEY')]) {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-ec2',keyFileVariable: 'SSH_PRIVATE_KEY')]) {
                     sh '''
                     # Debug: List contents of current directory
                     pwd
                     ls -la
                     # Deploy files
                     mkdir -p ~/.ssh
-                    ssh-keyscan -H 172.27.142.51 >> ~/.ssh/known_hosts 
-                    scp -i $SSH_PRIVATE_KEY -r react/deploy.tar.gz abdullah@172.27.142.51:/var/www/news-app/
+                    ssh-keyscan -H ubuntu@ec2-3-110-196-87.ap-south-1.compute.amazonaws.com >> ~/.ssh/known_hosts 
+                    scp -i $SSH_PRIVATE_KEY -r react/deploy.tar.gz abdullah@ubuntu@ec2-3-110-196-87.ap-south-1.compute.amazonaws.com:/var/www/news-app/
                     # Debug: List contents of remote directory
-                    ssh -i $SSH_PRIVATE_KEY abdullah@172.27.142.51 "cd /var/www/news-app &&  tar xzf deploy.tar.gz && rm deploy.tar.gz"
-                    ssh -i $SSH_PRIVATE_KEY abdullah@172.27.142.51 "ls -la /var/www/news-app/"
-                    ssh -i $SSH_PRIVATE_KEY abdullah@172.27.142.51 'systemctl status nginx'
+                    ssh -i $SSH_PRIVATE_KEY abdullah@ubuntu@ec2-3-110-196-87.ap-south-1.compute.amazonaws.com "cd /var/www/news-app &&  tar xzf deploy.tar.gz && rm deploy.tar.gz"
+                    ssh -i $SSH_PRIVATE_KEY abdullah@ubuntu@ec2-3-110-196-87.ap-south-1.compute.amazonaws.com "ls -la /var/www/news-app/"
+                    ssh -i $SSH_PRIVATE_KEY abdullah@ubuntu@ec2-3-110-196-87.ap-south-1.compute.amazonaws.com 'systemctl status nginx'
                     '''
                 }
             }
