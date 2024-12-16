@@ -12,7 +12,7 @@ sudo apt install nginx -y
 sudo mkdir -p /var/www/news-app
 
 # Set ownership of /var/www to 'abdullah' and 'abdullah' group
-sudo chown -R abdullah:abdullah /var/www/
+sudo chown -R ubuntu:ubuntu /var/www/
 
 # Set permissions for the /var/www directory (read, write, and execute for the owner, and read/execute for others)
 sudo chmod -R 755 /var/www/
