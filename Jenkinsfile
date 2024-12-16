@@ -14,7 +14,7 @@ pipeline {
             steps {
                 sh '''
                 cd react
-                #npm ci
+                npm ci
                 '''
             }
         }
