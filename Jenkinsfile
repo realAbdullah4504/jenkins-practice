@@ -10,33 +10,12 @@ pipeline {
         preserveStashes()
     }
     stages {
-        stage('Cache modules') {
-            when {
-                expression { currentBuild.previousBuild?.result == 'SUCCESS' }  // Only try to restore if previous build was successful
-            }
-            steps {
-                dir('react') {
-                    catchError(message: 'No cache found, proceeding with fresh install') {
-                        unstash 'node_modules'
-                        echo 'Successfully restored node_modules from cache'
-                    }
-                }
-            }
-        }
         stage('Install dependencies') {
             steps {
                 sh '''
                 cd react
-                npm ci --prefer-offline --no-audit
+                #npm ci
                 '''
-            }
-            post {
-                success {
-                    dir("react") {  //changing the current directory
-                        sh "pwd"
-                        stash includes: 'node_modules/**', name: 'node_modules'
-                    }
-                }
             }
         }
         stage ('Build') {
