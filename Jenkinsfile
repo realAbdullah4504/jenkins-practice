@@ -46,7 +46,7 @@ pipeline {
                     ssh-keyscan -H 172.27.142.51 >> ~/.ssh/known_hosts 
                     scp -i $SSH_PRIVATE_KEY -r react/deploy.tar.gz abdullah@172.27.142.51:/var/www/news-app/
                     # Debug: List contents of remote directory
-                    ssh -i $SSH_PRIVATE_KEY abdullah@172.27.142.51 "cd /var/www/news-app &&  sudo tar xzf deploy.tar.gz && sudo rm deploy.tar.gz"
+                    ssh -i $SSH_PRIVATE_KEY abdullah@172.27.142.51 "cd /var/www/news-app &&  tar xzf deploy.tar.gz && rm deploy.tar.gz"
                     ssh -i $SSH_PRIVATE_KEY abdullah@172.27.142.51 "ls -la var/www/news-app/"
                     ssh -i $SSH_PRIVATE_KEY abdullah@172.27.142.51 'systemctl status nginx'
                     '''
