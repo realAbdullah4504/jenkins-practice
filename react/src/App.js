@@ -10,7 +10,7 @@ function App() {
   return (
     <>
       <ToastContainer />
-      <Router basename="/news-app">
+      <Router>
         <div>
           <Routes>
             <Route path="/*" element={<Website />}></Route>
