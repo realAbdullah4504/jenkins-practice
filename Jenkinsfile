@@ -1,8 +1,9 @@
 pipeline {
     agent { docker { 
         image 'node:16-alpine' 
-        args '-v /usr/bin/scp:/usr/bin/scp -v /usr/bin/ssh:/usr/bin/ssh -v /usr/bin/ssh-keyscan:/usr/bin/ssh-keyscan -v /tmp/.cache:/tmp/.cache'
+        args '-v /usr/bin/scp:/usr/bin/scp -v /usr/bin/ssh:/usr/bin/ssh -v /usr/bin/ssh-keyscan:/usr/bin/ssh-keyscan '
         } }
+        // -v /tmp/.cache:/tmp/.cache
     environment {
         CI = 'false'
         EC_SERVER="ec2-3-110-196-87.ap-south-1.compute.amazonaws.com"
@@ -10,10 +11,21 @@ pipeline {
     stages {
         stage('Install dependencies') {
             steps {
+                cache(
+                    includes: 'node_modules/**/*',  // Include the directories you want to cache (e.g., node_modules)
+                    name: 'node_modules_cache',     // Define a name for the cache
+                    restore: true                   // Restore the cache if it exists
+                )
+                
                 sh '''
-                cd react
-                npm ci
+                npm ci  // Install dependencies (will be faster if cache is restored)
                 '''
+                
+                cache(
+                    includes: 'node_modules/**/*',
+                    name: 'node_modules_cache',
+                    store: true    // Store the cache after installing dependencies
+                )
             }
         }
         stage ('Build') {
@@ -27,8 +39,8 @@ pipeline {
                 success {
                     dir("react/") {  //changing the current directory
                     sh "pwd"
-                    sh "tar -cvf build.tar build/*"
-                    stash includes: 'build.tar', name: 'build'
+                    sh "tar -czvf build.tar.gz build/*"  // Create compressed tar.gz file
+                    stash includes: 'build.tar.gz', name: 'build'
                     }
                 }
             }
@@ -38,7 +50,7 @@ pipeline {
                 withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-ec2', keyFileVariable: 'SSH_PRIVATE_KEY')]) {
                     dir("react") {
                         unstash "build"
-                        
+
                         sh '''
                         # Debug: List contents of current directory
                         pwd
