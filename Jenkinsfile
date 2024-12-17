@@ -21,7 +21,7 @@ pipeline {
                     # Deploy files
                     mkdir -p ~/.ssh
                     ssh-keyscan -H $EC_SERVER >> ~/.ssh/known_hosts 
-                    ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER "mkdir -p ~/news-app/backend"
+                    ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER "mkdir -p ~/news-app-backend"
                     scp -i $SSH_PRIVATE_KEY -r backend/ ubuntu@$EC_SERVER:~/news-app-backend/
                     # Debug: List contents of remote directory
                     '''
