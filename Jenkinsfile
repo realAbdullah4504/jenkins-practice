@@ -10,22 +10,10 @@ pipeline {
     }
     stages {
         stage('Install dependencies') {
-            steps {
-                cache(
-                    includes: 'node_modules/**/*',  // Include the directories you want to cache (e.g., node_modules)
-                    name: 'node_modules_cache',     // Define a name for the cache
-                    restore: true                   // Restore the cache if it exists
-                )
-                
+            steps {      
                 sh '''
                 npm ci  // Install dependencies (will be faster if cache is restored)
                 '''
-                
-                cache(
-                    includes: 'node_modules/**/*',
-                    name: 'node_modules_cache',
-                    store: true    // Store the cache after installing dependencies
-                )
             }
         }
         stage ('Build') {
