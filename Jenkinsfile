@@ -15,6 +15,7 @@ pipeline {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-ec2',keyFileVariable: 'SSH_PRIVATE_KEY')]) {
                     sh '''
+                    sleep 180
                     # Debug: List contents of current directory
                     pwd
                     ls -la
