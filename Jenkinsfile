@@ -1,7 +1,7 @@
 pipeline {
     agent { docker { 
         image 'node:16-alpine' 
-        args '-v /usr/bin/scp:/usr/bin/scp -v /usr/bin/ssh:/usr/bin/ssh -v /usr/bin/ssh-keyscan:/usr/bin/ssh-keyscan'
+        args '-v /usr/bin/scp:/usr/bin/scp -v /usr/bin/ssh:/usr/bin/ssh -v /usr/bin/ssh-keyscan:/usr/bin/ssh-keyscan -v /tmp/.cache:/tmp/.cache'
         } }
     environment {
         CI = 'false'
@@ -52,6 +52,11 @@ pipeline {
                         ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER 'systemctl status nginx'
                         '''
                     }
+                }
+            }
+            post {
+                always {
+                    cleanWs()
                 }
             }
         }
