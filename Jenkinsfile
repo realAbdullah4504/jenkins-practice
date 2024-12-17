@@ -46,7 +46,7 @@ pipeline {
                         # Deploy files
                         mkdir -p ~/.ssh
                         ssh-keyscan -H $EC_SERVER >> ~/.ssh/known_hosts 
-                        scp -i $SSH_PRIVATE_KEY build.tar ubuntu@$EC_SERVER:/var/www/news-app/
+                        scp -i $SSH_PRIVATE_KEY build.tar.gz ubuntu@$EC_SERVER:/var/www/news-app/
                         # Debug: List contents of remote directory
                         ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER "cd /var/www/news-app && tar xzf build.tar.gz && rm build.tar.gz"
                         ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER "ls -la /var/www/news-app/"
