@@ -37,10 +37,11 @@ pipeline {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-ec2', keyFileVariable: 'SSH_PRIVATE_KEY')]) {
                     dir("react") {
+                        unstash "build"
+                        
                         sh '''
                         # Debug: List contents of current directory
                         pwd
-                        unstash "build"  # Unstash the build file
                         ls -la
                         # Deploy files
                         mkdir -p ~/.ssh
