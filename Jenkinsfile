@@ -1,6 +1,6 @@
 pipeline {
     agent { docker { 
-        image 'python:3.12.7-slim' 
+        image 'alpine' 
         args '-v /usr/bin/scp:/usr/bin/scp -v /usr/bin/ssh:/usr/bin/ssh -v /usr/bin/ssh-keyscan:/usr/bin/ssh-keyscan'
         } }
     environment {
@@ -21,8 +21,8 @@ pipeline {
                     ls -la
                     # Deploy files
                     mkdir -p ~/.ssh
-                    ssh -i $SSH_PRIVATE_KEY ubuntu@$EC2_SERVER "mkdir -p ~/news-app/backend"
                     ssh-keyscan -H $EC2_SERVER >> ~/.ssh/known_hosts 
+                    ssh -i $SSH_PRIVATE_KEY ubuntu@$EC2_SERVER "mkdir -p ~/news-app/backend"
                     scp -i $SSH_PRIVATE_KEY -r backend/ ubuntu@$EC2_SERVER:~/news-app-backend/
                     # Debug: List contents of remote directory
                     
