@@ -13,8 +13,8 @@ pipeline {
             steps {
                 sh '''
                 echo "hello" > a.txt
-                build job: 'news-app', wait: true
                 '''
+                build job: 'news-app', wait: true
             }
             post {
                 success {
