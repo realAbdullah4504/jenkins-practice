@@ -1,18 +1,18 @@
 pipeline {
     agent { docker { 
         image 'node:16-alpine' 
-        args '-v /usr/bin/scp:/usr/bin/scp -v /usr/bin/ssh:/usr/bin/ssh -v /usr/bin/ssh-keyscan:/usr/bin/ssh-keyscan '
+        args '-v /usr/bin/scp:/usr/bin/scp -v /usr/bin/ssh:/usr/bin/ssh -v /usr/bin/ssh-keyscan:/usr/bin/ssh-keyscan -v /tmp/.cache:/tmp/.cache'
         } }
-        // -v /tmp/.cache:/tmp/.cache
     environment {
         CI = 'false'
         EC_SERVER="ec2-3-110-196-87.ap-south-1.compute.amazonaws.com"
     }
     stages {
         stage('Install dependencies') {
-            steps {      
+            steps {
                 sh '''
-                npm ci  // Install dependencies (will be faster if cache is restored)
+                cd react
+                npm ci
                 '''
             }
         }
