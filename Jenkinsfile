@@ -1,33 +1,46 @@
 pipeline {
     agent { docker { 
         image 'node:16-alpine' 
-        args '-v /usr/bin/scp:/usr/bin/scp -v /usr/bin/ssh:/usr/bin/ssh -v /usr/bin/ssh-keyscan:/usr/bin/ssh-keyscan -v /tmp/.cache:/tmp/.cache'
+        args '-v /usr/bin/scp:/usr/bin/scp 
+            -v /usr/bin/ssh:/usr/bin/ssh 
+            -v /usr/bin/ssh-keyscan:/usr/bin/ssh-keyscan 
+            -v /tmp/.cache:/tmp/.cache'
         } }
     environment {
         CI = 'false'
         EC_SERVER="ec2-3-110-196-87.ap-south-1.compute.amazonaws.com"
     }
     stages {
-        stage('Install dependencies') {
+        stage('Cache Dependencies') {
             steps {
-                sh '''
-                cd react
-                npm ci
-                '''
+                // Cache the node_modules directory
+                cache(maxCacheSize: 250, caches: [
+                    [path: 'react/node_modules', key: 'node_modules-cache-${checksum "react/package-lock.json"}']
+                ]) {
+                    sh '''
+                    cd react
+                    npm ci
+                    '''
+                }
             }
         }
         stage ('Build') {
             steps {
-                sh '''
-                cd react
-                npm run build
-                '''
+                // Cache the build directory
+                cache(maxCacheSize: 250, caches: [
+                    [path: 'react/build', key: 'build-cache-${BUILD_NUMBER}']
+                ]) {
+                    sh '''
+                    cd react
+                    npm run build
+                    '''
+                }
             }
             post {
                 success {
-                    dir("react/") {  //changing the current directory
+                    dir("react/") { 
                     sh "pwd"
-                    sh "tar -czvf build.tar.gz build/*"  // Create compressed tar.gz file
+                    sh "tar -czvf build.tar.gz  -C build ."
                     stash includes: 'build.tar.gz', name: 'build'
                     }
                 }
