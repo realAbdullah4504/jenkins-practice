@@ -6,6 +6,7 @@ sudo apt upgrade -y
 sudo apt install nginx -y
 sudo apt install npm -y
 sudo npm install -g pm2
+sudo apt install python3.12-venv -y
 
 #mongoDB installation
 
