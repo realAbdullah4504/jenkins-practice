@@ -19,7 +19,8 @@ pipeline {
                 cache(maxCacheSize: 250, caches: [
                 [$class: 'ArbitraryFileCache', 
                 path: 'react/node_modules', 
-                key: 'node_modules-cache-${checksum "react/package.json"}']
+                key: 'node_modules-cache-${checksum "react/package.json"}'],
+                compression: true
                 ]) {
                     sh '''
                     cd react
@@ -67,11 +68,11 @@ pipeline {
                     }
                 }
             }
-            post {
-                always {
-                    // cleanWs()
-                }
-            }
+            // post {
+            //     always {
+            //         // cleanWs()
+            //     }
+            // }
         }
     }
 }
