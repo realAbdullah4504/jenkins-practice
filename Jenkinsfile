@@ -11,10 +11,14 @@ pipeline {
     stages {
         stage ('Build') {
             steps {
-                sh '''
-                echo "hello" > a.txt
-                '''
-                build job: 'news-app', wait: true
+                cache(maxCacheSize: 0, caches: [
+                arbitraryFileCache(path: '/', cacheValidityDecidingFile: 'b.txt')
+                ]) {
+                    sh '''
+                    echo "hello" > a.txt
+                    '''
+                }
+                    // build job: 'news-app', wait: true
             }
             post {
                 success {
