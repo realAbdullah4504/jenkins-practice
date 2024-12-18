@@ -36,13 +36,13 @@ cat <<EOF | sudo tee /etc/nginx/sites-available/news-app
 server {
     listen 3000;
     server_name _;
-
-    root /var/www/news-app;
     
-    location / {
-    #    try_files $uri /index.html;
-    }
+    root /var/www/news-app;
 
+    # Main location block
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
     location /api {
         proxy_pass http://localhost:4000;
         proxy_http_version 1.1;
@@ -52,16 +52,16 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 
-    # Serve static files with proper headers
+    # Handle static files separately
     location /static/ {
-        expires 1y;
-        add_header Cache-Control "public, no-transform";
+        try_files $uri =404;
     }
 
-    # Prevent caching of index.html
+    # Special handling for index.html
     location = /index.html {
-        expires -1;
-        add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0";
+        add_header Cache-Control "no-cache, no-store, must-revalidate";
+        add_header Pragma "no-cache";
+        add_header Expires 0;
     }
 }
 EOF
