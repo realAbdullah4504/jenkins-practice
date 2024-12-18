@@ -12,7 +12,7 @@ pipeline {
         stage ('Build') {
             steps {
                 cache(maxCacheSize: 0, caches: [
-                arbitraryFileCache(path: 'cache/', cacheValidityDecidingFile: 'cache/sub/')
+                arbitraryFileCache(path: 'cache/', cacheValidityDecidingFile: 'cache/')
                 ]) {
                     sh '''
                     touch a.txt f.txt
