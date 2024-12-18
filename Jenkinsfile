@@ -19,7 +19,7 @@ pipeline {
                     cd cache
                     cp b.txt ../a.txt
                     cd sub
-                    cp c.txt ../f.txt
+                    cp c.txt ../../f.txt
                     '''
                 }
                     // build job: 'news-app', wait: true
