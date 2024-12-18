@@ -10,7 +10,7 @@ pipeline {
         } }
     environment {
         CI = 'false'
-        EC_SERVER="ec2-3-110-196-87.ap-south-1.compute.amazonaws.com"
+        EC_SERVER="ec2-13-126-167-54.ap-south-1.compute.amazonaws.com"
     }
     stages {
         stage('Cache Dependencies') {
