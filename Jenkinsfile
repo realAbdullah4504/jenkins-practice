@@ -17,7 +17,9 @@ pipeline {
             steps {
                 // Cache the node_modules directory
                 cache(maxCacheSize: 250, caches: [
-                    [path: 'react/node_modules', key: 'node_modules-cache-${checksum "react/package-lock.json"}']
+                [$class: 'ArbitraryFileCache', 
+                path: 'react/node_modules', 
+                key: 'node_modules-cache-${checksum "react/package.json"}']
                 ]) {
                     sh '''
                     cd react
@@ -28,15 +30,10 @@ pipeline {
         }
         stage ('Build') {
             steps {
-                // Cache the build directory
-                cache(maxCacheSize: 250, caches: [
-                    [path: 'react/build', key: 'build-cache-${BUILD_NUMBER}']
-                ]) {
-                    sh '''
-                    cd react
-                    npm run build
-                    '''
-                }
+                sh '''
+                cd react
+                npm run build
+                '''
             }
             post {
                 success {
@@ -72,7 +69,7 @@ pipeline {
             }
             post {
                 always {
-                    cleanWs()
+                    // cleanWs()
                 }
             }
         }
