@@ -45,12 +45,12 @@ pipeline {
                         '''
                     }
                 }
-            }
             post {
                 success {
                     sh 'ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "pm2 status"'
                     sh 'ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "pm2 logs"'
                 }
             }
+        }
     }
 }
