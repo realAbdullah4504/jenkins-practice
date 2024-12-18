@@ -20,7 +20,9 @@ pipeline {
             ]) {
                 sh '''
                 cd react
+                if [ ! -d "node_modules" ]; then
                 npm ci
+                fi
                 '''
                 }
             }
