@@ -15,7 +15,9 @@ pipeline {
     stages {
         stage('Cache Dependencies') {
             steps {
-                jobCache(maxCacheSize: 250, compress: true) {
+            cache(maxCacheSize: 250, caches: [
+            arbitraryFileCache(path: 'react/node_modules', cacheValidityDecidingFile: 'react/package-lock.json')
+            ]) {
                 sh '''
                 cd react
                 npm ci
