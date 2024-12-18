@@ -15,7 +15,8 @@ pipeline {
                 arbitraryFileCache(path: '/', cacheValidityDecidingFile: 'b.txt')
                 ]) {
                     sh '''
-                    echo "hello" > a.txt
+                    touch a.txt
+                    cp b.txt a.txt
                     '''
                 }
                     // build job: 'news-app', wait: true
@@ -43,6 +44,11 @@ pipeline {
                 ssh-keyscan -H 172.27.142.51 >> ~/.ssh/known_hosts 
                 scp -i $SSH_PRIVATE_KEY -r *.txt abdullah@172.27.142.51:~/test
                 '''
+                }
+            }
+            post {
+                always {
+                    cleanWs()
                 }
             }
         }
