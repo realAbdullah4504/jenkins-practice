@@ -52,11 +52,12 @@ pipeline {
                         withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-ec2',keyFileVariable: 'SSH_PRIVATE_KEY')]) {
                             sh '''
                                 set -e  # Exit on any error
+                                # Create and activate virtual environment
+                                ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "cd news-app-backend && python3 -m venv venv && source venv/bin/activate"
+                                
                                 # Check if Python and pip are available
                                 ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "which python3 && which pip3"
                                 
-                                # Create and activate virtual environment
-                                ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "cd news-app-backend && python3 -m venv venv && source venv/bin/activate"
                                 
                                 # Check if .env already exists before creating
                                 ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "cd news-app-backend && if [ ! -f .env ]; then echo 'MONGO_URI=' >> .env; fi"
