@@ -30,7 +30,7 @@ pipeline {
         stage ('Build') {
             steps {
                 cache(maxCacheSize: 0, caches: [
-                arbitraryFileCache(path: 'react/build', cacheValidityDecidingFile: 'react/src/,/react/.env')
+                arbitraryFileCache(path: 'react/build', cacheValidityDecidingFile: 'react/src/')
                 ]) {
 
                 sh '''
@@ -45,6 +45,7 @@ pipeline {
                 success {
                     dir("react/") { 
                     sh "pwd"
+                    echo 'REACT_APP_API_URL=/api' >> .env
                     sh "tar -czvf build.tar.gz  -C build ."
                     stash includes: 'build.tar.gz', name: 'build'
                     }
