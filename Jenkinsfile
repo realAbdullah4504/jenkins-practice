@@ -88,13 +88,9 @@ pipeline {
         }
         failure {
             echo 'Pipeline failed! Sending notification...'
-            sh 'ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "pm2 status" '
-            sh 'ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "pm2 logs" '
         }
         success {
             echo 'Pipeline succeeded!'
-            sh ' ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "pm2 status" '
-            sh ' ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "pm2 logs" '
         }
     }
 }
