@@ -1,10 +1,12 @@
 pipeline {
     agent { docker { 
         image 'node:16-alpine' 
-        args '-v /usr/bin/scp:/usr/bin/scp 
+        args '''
+            -v /usr/bin/scp:/usr/bin/scp 
             -v /usr/bin/ssh:/usr/bin/ssh 
             -v /usr/bin/ssh-keyscan:/usr/bin/ssh-keyscan 
-            -v /tmp/.cache:/tmp/.cache'
+            -v /tmp/.cache:/tmp/.cache
+            '''
         } }
     environment {
         CI = 'false'
