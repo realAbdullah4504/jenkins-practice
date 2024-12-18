@@ -30,7 +30,7 @@ pipeline {
         stage ('Build') {
             steps {
                 cache(maxCacheSize: 0, caches: [
-                arbitraryFileCache(path: 'react/build', cacheValidityDecidingFile: 'react/**')
+                arbitraryFileCache(path: 'react/build', cacheValidityDecidingFile: 'react/**',excludes:'/react/build')
                 ]) {
 
                 sh '''
