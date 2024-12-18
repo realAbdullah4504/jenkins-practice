@@ -4,7 +4,7 @@
 sudo apt update -y
 sudo apt upgrade -y
 sudo apt install nginx -y
-sudo apt install -y nodejs
+sudo apt install npm -y
 sudo npm install -g pm2
 
 #mongoDB installation
