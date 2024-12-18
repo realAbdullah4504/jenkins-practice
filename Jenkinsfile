@@ -12,11 +12,14 @@ pipeline {
         stage ('Build') {
             steps {
                 cache(maxCacheSize: 0, caches: [
-                arbitraryFileCache(path: '*.txt', cacheValidityDecidingFile: 'b.txt')
+                arbitraryFileCache(path: 'cache/**', cacheValidityDecidingFile: 'b.txt')
                 ]) {
                     sh '''
-                    touch a.txt
-                    cp b.txt a.txt
+                    touch a.txt f.txt
+                    cd cache
+                    cp b.txt ../a.txt
+                    cd sub
+                    cp c.txt ../f.txt
                     '''
                 }
                     // build job: 'news-app', wait: true
