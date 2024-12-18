@@ -5,10 +5,7 @@ pipeline {
         } }
     environment {
         CI = 'false'
-        EC_SERVER = 'ec2-3-110-196-87.ap-south-1.compute.amazonaws.com'
-    }
-    options {
-        preserveStashes()
+        EC_SERVER_DEV = credentials("EC_SERVER_DEV")
     }
     stages {
         stage('Copy App') {
@@ -16,15 +13,23 @@ pipeline {
                 withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-ec2',keyFileVariable: 'SSH_PRIVATE_KEY')]) {
                     sh '''
                     # Debug: List contents of current directory
+                    tar -czvf backend.tar.gz  -C backend .
                     pwd
                     ls -la
                     # Deploy files
                     mkdir -p ~/.ssh
-                    ssh-keyscan -H $EC_SERVER >> ~/.ssh/known_hosts 
-                    ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER "mkdir -p ~/news-app-backend"
-                    scp -i $SSH_PRIVATE_KEY -r backend/* ubuntu@$EC_SERVER:~/news-app-backend/
+                    ssh-keyscan -H $EC_SERVER_DEV >> ~/.ssh/known_hosts 
+                    ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "mkdir -p ~/news-app-backend"
+                    ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "rm -rf ~/news-app-backend/*"
+                    scp -i $SSH_PRIVATE_KEY -r backend.tar.gz ubuntu@$EC_SERVER_DEV:~/news-app-backend/
+                    ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "cd ~/news-app-backend && tar xzf backend.tar.gz && rm backend.tar.gz"
                     # Debug: List contents of remote directory
                     '''
+                }
+            }
+            post {
+                success{
+                sh 'ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "cd news-app-backend && ls -a" '
                 }
             }
         }
@@ -33,12 +38,18 @@ pipeline {
             steps { 
                     withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-ec2',keyFileVariable: 'SSH_PRIVATE_KEY')]) {
                         sh '''
-                        ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER "cd news-app-backend && python -m venv venv && source venv/bin/activate"
-                        ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER "cd news-app-backend && echo 'MONGO_URI' >> .env"
-                        ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER "cd news-app-backend && pip install -r requirements.txt"
-                        ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER "cd news-app-backend &&  python3 article_api.py"
+                        ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "cd news-app-backend && python -m venv venv && source venv/bin/activate"
+                        ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "cd news-app-backend && echo 'MONGO_URI' >> .env"
+                        ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "cd news-app-backend && pip install -r requirements.txt"
+                        ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "cd news-app-backend && pm2 start article_api.py"
                         '''
                     }
+                }
+            }
+            post {
+                success {
+                    sh 'ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "pm2 status"'
+                    sh 'ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "pm2 logs"'
                 }
             }
     }
