@@ -15,8 +15,8 @@ pipeline {
     stages {
         stage('Cache Dependencies') {
             steps {
-            cache(maxCacheSize: 250, caches: [
-            arbitraryFileCache(path: 'react/node_modules', cacheValidityDecidingFile: 'react/package-lock.json')
+            cache(maxCacheSize: 0, caches: [
+            arbitraryFileCache(path: 'react/node_modules', cacheValidityDecidingFile: 'react/package.json')
             ]) {
                 sh '''
                 cd react
