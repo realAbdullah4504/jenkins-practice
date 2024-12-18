@@ -33,6 +33,8 @@ pipeline {
             steps { 
                     withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-ec2',keyFileVariable: 'SSH_PRIVATE_KEY')]) {
                         sh '''
+                        ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER "cd news-app-backend && python -m venv venv && source venv/bin/activate"
+                        ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER "cd news-app-backend && echo 'MONGO_URI' >> .env"
                         ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER "cd news-app-backend && pip install -r requirements.txt"
                         ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER "cd news-app-backend &&  python3 article_api.py"
                         '''
