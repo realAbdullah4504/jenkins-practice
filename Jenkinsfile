@@ -29,10 +29,17 @@ pipeline {
         }
         stage ('Build') {
             steps {
+                cache(maxCacheSize: 0, caches: [
+                arbitraryFileCache(path: 'react/build', cacheValidityDecidingFile: 'react/package.json')
+                ]) {
+
                 sh '''
                 cd react
+                if [ ! -d "build" ]; then
                 npm run build
+                fi
                 '''
+                }
             }
             post {
                 success {
