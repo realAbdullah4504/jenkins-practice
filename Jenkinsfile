@@ -15,17 +15,11 @@ pipeline {
     stages {
         stage('Cache Dependencies') {
             steps {
-                // Cache the node_modules directory
-                cache(maxCacheSize: 250, caches: [
-                [$class: 'ArbitraryFileCache', 
-                path: 'react/node_modules', 
-                key: 'node_modules-cache-${checksum "react/package.json"}'],
-                compression: true
-                ]) {
-                    sh '''
-                    cd react
-                    npm ci
-                    '''
+                jobCache(maxCacheSize: 250, compress: true) {
+                sh '''
+                cd react
+                npm ci
+                '''
                 }
             }
         }
