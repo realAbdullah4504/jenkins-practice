@@ -10,7 +10,7 @@ pipeline {
         } }
     environment {
         CI = 'false'
-        EC_SERVER="ec2-13-126-167-54.ap-south-1.compute.amazonaws.com"
+        EC_SERVER_DEV=credentials("EC_SERVER_DEV")
     }
     stages {
         stage('Cache Dependencies') {
@@ -64,12 +64,12 @@ pipeline {
                         ls -la
                         # Deploy files
                         mkdir -p ~/.ssh
-                        ssh-keyscan -H $EC_SERVER >> ~/.ssh/known_hosts 
-                        scp -i $SSH_PRIVATE_KEY build.tar.gz ubuntu@$EC_SERVER:/var/www/news-app/
+                        ssh-keyscan -H $EC_SERVER_DEV >> ~/.ssh/known_hosts 
+                        scp -i $SSH_PRIVATE_KEY build.tar.gz ubuntu@$EC_SERVER_DEV:/var/www/news-app/
                         # Debug: List contents of remote directory
-                        ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER "cd /var/www/news-app && tar xzf build.tar.gz && rm build.tar.gz"
-                        ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER "ls -la /var/www/news-app/"
-                        ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER 'systemctl status nginx'
+                        ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "cd /var/www/news-app && tar xzf build.tar.gz && rm build.tar.gz"
+                        ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "ls -la /var/www/news-app/"
+                        ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV 'systemctl status nginx'
                         '''
                     }
                 }
