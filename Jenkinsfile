@@ -64,7 +64,7 @@ pipeline {
                                 ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "which pm2 || npm install -g pm2"
                                 
                                 # Stop existing process if running
-                                ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "pm2 stop article_api.py || true"
+                                ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "pm2 delete article_api.py || true"
                                 
                                 # Start the application
                                 ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "cd news-app-backend && source venv/bin/activate && pm2 start article_api.py --interpreter python3"
