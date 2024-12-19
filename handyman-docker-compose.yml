@@ -1,0 +1,29 @@
+services:
+  handyman-app:
+    # build:
+    #   context: ./handyman
+    image: abdullah111111/handyman-app
+    ports:
+      - "3000:3000"
+    # depends_on:
+    #   - mongo
+    environment:
+      - NEXT_PUBLIC_ENV=development
+      # - NEXT_MONGO_URL=mongodb+srv://Javed:QfgtEOcLSYGtQgLT@cluster0.c7tvp.mongodb.net/developement
+      - NEXT_MONGO_URL=mongodb://root_user:example@mongo:27017/developement
+      - BASE_URL=http://localhost:3000
+      - NEXT_PUBLIC_BASE_URL=http://localhost:3000
+      - ACCESS_TOKEN_SECRET=sfdfd4jsjdjsds
+      - REFRESH_TOKEN_SECRET=dsdsd4sdsdsd
+      - CLOUDINARY_URL=cloudinary://195434589214847:j4aWR-dS4IVIoQuaX8q2EGGy-8g@dcncm1bi9
+    # volumes:
+    #   - .:/app
+    networks:
+    - handyman-app
+    - mongo-network
+
+networks:
+  handyman-app:
+    driver: bridge
+  mongo-network:
+    name: mongo-network
