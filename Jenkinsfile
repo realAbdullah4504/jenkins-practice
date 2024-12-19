@@ -45,6 +45,8 @@ pipeline {
                 withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-ec2', keyFileVariable: 'SSH_PRIVATE_KEY')]) {
                 sh """
                 mkdir -p ~/.ssh
+                mkdir -p ~/handyman-app
+                scp -i $SSH_PRIVATE_KEY handyman/*.yml ubuntu@$EC_SERVER_DEV:~/handyman-app
                 ssh-keyscan -H $EC_SERVER_DEV >> ~/.ssh/known_hosts
                 ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV << EOF
                     set -e
@@ -57,9 +59,8 @@ pipeline {
                     else
                         echo "No running containers to stop."
                     fi
-
                     echo "Pulling the latest Docker image..."
-                    docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
+                    docker pull ${DOCKER_IMAGE}:latest
 
                     echo "Starting new containers..."
                     docker-compose -f ~/handyman-app/handyman-docker-compose.yml -f ~/handyman-app/mongo-docker-compose.yml up -d
