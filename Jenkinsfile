@@ -32,7 +32,7 @@ pipeline {
                                 # Check if connection is possible before proceeding
                                 ssh -i $SSH_PRIVATE_KEY -o BatchMode=yes ubuntu@$EC_SERVER_DEV "echo 'Connection successful'"
                                 
-                                ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "if[! -d  ~/news-app-backend]; then  mkdir -p ~/news-app-backend ; fi"
+                                ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "if [ ! -d ~/news-app-backend ]; then mkdir -p ~/news-app-backend; fi"
                                 ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "rm -rf ~/news-app-backend/*"
                                 scp -i $SSH_PRIVATE_KEY -r backend.tar.gz ubuntu@$EC_SERVER_DEV:~/news-app-backend/
                                 ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV "cd ~/news-app-backend && tar xzf backend.tar.gz && rm backend.tar.gz"
