@@ -46,8 +46,8 @@ pipeline {
                 sh """
                 mkdir -p ~/.ssh
                 mkdir -p ~/handyman-app
-                scp -i $SSH_PRIVATE_KEY handyman/*.yml ubuntu@$EC_SERVER_DEV:~/handyman-app
                 ssh-keyscan -H $EC_SERVER_DEV >> ~/.ssh/known_hosts
+                scp -i $SSH_PRIVATE_KEY handyman/*.yml ubuntu@$EC_SERVER_DEV:~/handyman-app
                 ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV << EOF
                     set -e
                     
