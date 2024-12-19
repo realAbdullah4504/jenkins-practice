@@ -44,6 +44,8 @@ pipeline {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-ec2', keyFileVariable: 'SSH_PRIVATE_KEY')]) {
                 sh """
+                mkdir -p ~/.ssh
+                ssh-keyscan -H $EC_SERVER_DEV >> ~/.ssh/known_hosts
                 ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV << EOF
                     set -e
                     
