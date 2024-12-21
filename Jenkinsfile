@@ -46,7 +46,16 @@ pipeline {
                 sh """
                 ssh ubuntu@$EC_SERVER_DEV 'if [ ! -d handyman ]; then mkdir handyman; fi'
                 scp -i $EC_SERVER_DEV handyman/*.yml ubuntu@$EC_SERVER_DEV:/home/ubuntu/handyman/
-                ssh ubuntu@$EC_SERVER_DEV 'cd handyman && if [ ! docker ps -a | grep handyman ]; then docker-compose up -d; else docker-compose down && docker-compose up -d; fi'
+                ssh ubuntu@$EC_SERVER_DEV << EOF
+                cd handyman
+                if [ ! docker ps -a | grep handyman ]; then
+                docker-compose -f handyman-docker-compose.yml -f mongo-docker-compose.yml up -d
+                else
+                docker-compose -f handyman-docker-compose.yml -f mongo-docker-compose.yml down 
+                && 
+                docker-compose -f handyman-docker-compose.yml -f mongo-docker-compose.yml up -d
+                fi
+                EOF
                 """
                 }
             }
