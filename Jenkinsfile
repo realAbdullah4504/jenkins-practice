@@ -43,18 +43,11 @@ pipeline {
                 sh "if [ ! -d ~/.ssh ]; then mkdir -p ~/.ssh; fi"
                 sh "ssh-keyscan -H $EC_SERVER_DEV >> ~/.ssh/known_hosts"
                 sshagent (credentials: ['jenkins-ec2']) {
-                sh """
+                sh '''
                 ssh ubuntu@$EC_SERVER_DEV 'if [ ! -d handyman ]; then mkdir handyman; fi'
-                scp -i $EC_SERVER_DEV handyman/*.yml ubuntu@$EC_SERVER_DEV:/home/ubuntu/handyman/
-                ssh ubuntu@$EC_SERVER_DEV << EOF
-                cd handyman
-                if [ ! docker ps -a | grep handyman ]; then
-                docker-compose -f handyman-docker-compose.yml -f mongo-docker-compose.yml up -d
-                else
-                docker-compose -f handyman-docker-compose.yml -f mongo-docker-compose.yml down && docker-compose -f handyman-docker-compose.yml -f mongo-docker-compose.yml up -d
-                fi
-                EOF
-                """
+                scp handyman/*.yml deploy.sh ubuntu@$EC_SERVER_DEV:/home/ubuntu/handyman/
+                ssh ubuntu@$EC_SERVER_DEV 'cd handyman && chmod +x deploy.sh && ./deploy.sh'
+                '''
                 }
             }
             post {
