@@ -40,10 +40,11 @@ pipeline {
         }
         stage ("Deploy on Server") {
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-ec2', keyFileVariable: 'SSH_PRIVATE_KEY')]) {
+                sh "if [ ! -d ~/.ssh ]; then mkdir -p ~/.ssh; fi"
+                sh "ssh-keyscan -H $EC_SERVER_DEV >> ~/.ssh/known_hosts"
+                sshagent (credentials: ['jenkins-ec2']) {
                 sh """
-                ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY
-                ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV 'docker -v'
+                ssh ubuntu@$EC_SERVER_DEV 'docker -v'
                 """
                 }
             }
