@@ -42,7 +42,8 @@ pipeline {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'jenkins-ec2', keyFileVariable: 'SSH_PRIVATE_KEY')]) {
                 sh """
-                echo "hello"
+                ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY
+                ssh -i $SSH_PRIVATE_KEY ubuntu@$EC_SERVER_DEV 'docker -v'
                 """
                 }
             }
