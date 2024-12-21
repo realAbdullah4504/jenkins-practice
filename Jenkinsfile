@@ -44,7 +44,9 @@ pipeline {
                 sh "ssh-keyscan -H $EC_SERVER_DEV >> ~/.ssh/known_hosts"
                 sshagent (credentials: ['jenkins-ec2']) {
                 sh """
-                ssh ubuntu@$EC_SERVER_DEV 'docker -v'
+                ssh ubuntu@$EC_SERVER_DEV 'if [ ! -d handyman ]; then mkdir handyman; fi'
+                scp -i $EC_SERVER_DEV handyman/*.yml ubuntu@$EC_SERVER_DEV:/home/ubuntu/
+                ssh ubuntu@$EC_SERVER_DEV 'cd handyman && if [ ! docker ps -a | grep handyman ]; then docker-compose up -d; else docker-compose down && docker-compose up -d; fi'
                 """
                 }
             }
