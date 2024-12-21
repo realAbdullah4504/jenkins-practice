@@ -21,6 +21,7 @@ pipeline {
                     sh '''
                         mkdir -p ~/.docker
                         echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                        docker pull ${DOCKER_IMAGE}:latest || true
                     '''
                     
                     sh """
