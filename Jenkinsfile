@@ -51,9 +51,7 @@ pipeline {
                 if [ ! docker ps -a | grep handyman ]; then
                 docker-compose -f handyman-docker-compose.yml -f mongo-docker-compose.yml up -d
                 else
-                docker-compose -f handyman-docker-compose.yml -f mongo-docker-compose.yml down 
-                && 
-                docker-compose -f handyman-docker-compose.yml -f mongo-docker-compose.yml up -d
+                docker-compose -f handyman-docker-compose.yml -f mongo-docker-compose.yml down && docker-compose -f handyman-docker-compose.yml -f mongo-docker-compose.yml up -d
                 fi
                 EOF
                 """
